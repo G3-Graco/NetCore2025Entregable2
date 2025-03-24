@@ -16,17 +16,19 @@ namespace Infrastructure.Data.Configurations
             builder.HasKey(x => x.id);
             builder.Property(x => x.id).UseIdentityColumn();
             builder.Property(x => x.nombre).IsRequired().HasMaxLength(255);
-            builder.Property(x => x.salud).IsRequired();
-            builder.Property(x => x.energia).IsRequired();
-            builder.Property(x => x.fuerza).IsRequired();
-            builder.Property(x => x.inteligencia).IsRequired();
-            builder.Property(x => x.agilidad).IsRequired();
+            builder.Property(x => x.saludId).IsRequired();
+            builder.Property(x => x.energiaId).IsRequired();
+            builder.Property(x => x.fuerzaId).IsRequired();
+            builder.Property(x => x.inteligenciaId).IsRequired();
+            builder.Property(x => x.agilidadId).IsRequired();
             builder.Property(x => x.nivel).IsRequired();
             //builder.Property(x => x.idTipoPersonaje).IsRequired();
             //builder.Property(x => x.equipo).IsRequired();
             builder.Property(x => x.experiencia).IsRequired();
             builder.HasMany(p => p.habilidades).WithMany(habilidad => habilidad.personajes);
             builder.HasOne(p => p.tipo).WithMany().HasForeignKey(p => p.tipoId);
+            builder.HasOne(p => p.ubicacion).WithMany().HasForeignKey(p => p.ubicacionId);
+            builder.HasOne(p => p.equipo).WithMany().HasForeignKey(p => p.equipoId);
             builder.ToTable("Personaje");
         }
     }

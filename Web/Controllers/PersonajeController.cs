@@ -1,4 +1,5 @@
-﻿using Core.Entities;
+﻿using Core.DTO;
+using Core.Entities;
 using Core.Interfaces;
 using Core.Interfaces.Entities;
 using Core.Services;
@@ -31,7 +32,7 @@ namespace Web.Crontrollers
 
         // POST api/<PersonajeController>
         [HttpPost]
-        public async Task<ActionResult<Personaje>> Post([FromBody] Personaje personaje)
+        public async Task<ActionResult<Personaje>> Post([FromBody] PersonajeDTO personaje)
         {
             try
             {

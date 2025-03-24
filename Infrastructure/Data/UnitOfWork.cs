@@ -18,7 +18,13 @@ namespace Infrastructure.Data
         private MisionRepository _misionRepository;
         private ObjetoRepository _objetoRepository;
         private UbicacionRepository _ubicacionRepository;
-
+        private TipoPersonajeRepository _tipoPersonajeRepository;
+        private TipoEstadisticaRepository _tipoEstadisticaRepository;
+        private TipoObjetoRepository _tipoObjetoRepository;
+        private EstadisticaRepository _estadisticaRepository;
+        private RanuraRepository _ranuraRepository;
+        private PersonajeMisionRepository _personajeMision;
+        private ObjetivoRepository _objetivoRepository;
         public UnitOfWork(AppDbContext context)
         {
             this._context = context;
@@ -31,6 +37,14 @@ namespace Infrastructure.Data
         public IMisionRepository MisionRepository => _misionRepository ??= new MisionRepository(_context);
         public IObjetoRepository ObjetoRepository => _objetoRepository ??= new ObjetoRepository(_context);
         public IUbicacionRepository UbicacionRepository => _ubicacionRepository ??= new UbicacionRepository(_context);
+        public ITipoPersonajeRepository TipoPersonajeRepository => _tipoPersonajeRepository ??= new TipoPersonajeRepository(_context);
+        public ITipoEstadisticaRepository TipoEstadisticaRepository => _tipoEstadisticaRepository ??= new TipoEstadisticaRepository(_context);
+        public ITipoObjetoRepository TipoObjetoRepository => _tipoObjetoRepository ??= new TipoObjetoRepository(_context);
+        public IEstadisticaRepository EstadisticaRepository => _estadisticaRepository ??= new EstadisticaRepository(_context);
+        public IRanuraRepository RanuraRepository => _ranuraRepository ??= new RanuraRepository(_context);
+        public IPersonajeMisionRepository PersonajeMisionRepository => _personajeMision ??= new PersonajeMisionRepository(_context);
+        public IObjetivoRepository ObjetivoRepository => _objetivoRepository ??= new ObjetivoRepository(_context);
+
 
         public async Task<int> CommitAsync()
         {

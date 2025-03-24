@@ -10,8 +10,8 @@ namespace Core.Entities
     {
         public int id { get; set; }
         public string nombre { get; set; } = string.Empty;
-        public List<string> objetivos { get; set; } = new List<string>();
         public List<string> recompensas { get; set; } = new List<string>();
-        public char estado { get; set; }
+        public virtual List<Objetivo> objetivos { get; set; } = new();
+        public virtual List<PersonajeMision> PersonajeMisiones { get; set; } = new();
     }
 }

@@ -16,8 +16,9 @@ namespace Infrastructure.Data.Configurations
             builder.Property(x => x.id).UseIdentityColumn();
             builder.Property(x => x.nombre).IsRequired().HasMaxLength(255); 
             builder.Property(x => x.descripcion).IsRequired().HasMaxLength(255); 
-            builder.Property(x => x.tipo).IsRequired().HasMaxLength(255); 
-            builder.Property(x => x.estadisticas).IsRequired(); 
+            builder.Property(x => x.tipoObjetoId).IsRequired(); 
+            builder.Property(x => x.estadisticas).IsRequired();
+            builder.HasOne(one => one.tipoObjeto).WithMany().HasForeignKey(k => k.tipoObjetoId);
             builder.ToTable("Objeto");
         }
     }

@@ -1,3 +1,4 @@
+using Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,7 @@ namespace Core.Interfaces.Entities
     {
         public int id { get; set; }
         public string nombre { get; set; }
-        public List<string> objetivos { get; set; }
+        public List<Objetivo> objetivos { get; set; }
         public List<string> recompensas { get; set; }
-        public char estado { get; set; }
     }
 }

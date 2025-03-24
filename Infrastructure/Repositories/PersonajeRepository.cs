@@ -18,7 +18,10 @@ namespace Infrastructure.Repositories
             return await base.dbSet.Include(x => x.habilidades).ToListAsync();
         }
 
-
+        //public override async ValueTask<Personaje> GetByIdAsync(int id)
+        //{
+        //    return await base.dbSet. .FindAsync(id).;
+        //}
 
     }
 }

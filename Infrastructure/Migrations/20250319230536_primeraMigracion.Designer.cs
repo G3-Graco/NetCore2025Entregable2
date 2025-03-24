@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250129233006_TipoPersonaje2")]
-    partial class TipoPersonaje2
+    [Migration("20250319230536_primeraMigracion")]
+    partial class primeraMigracion
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -76,9 +76,6 @@ namespace Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
 
-                    b.Property<int?>("Personajeid")
-                        .HasColumnType("integer");
-
                     b.Property<string>("arma1")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -110,8 +107,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("character varying(255)");
 
                     b.HasKey("id");
-
-                    b.HasIndex("Personajeid");
 
                     b.ToTable("Equipo", (string)null);
                 });
@@ -254,12 +249,17 @@ namespace Infrastructure.Migrations
                     b.Property<int>("salud")
                         .HasColumnType("integer");
 
-                    b.Property<int>("tipoId")
+                    b.Property<int?>("tipoId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("ubicacionId")
                         .HasColumnType("integer");
 
                     b.HasKey("id");
 
                     b.HasIndex("tipoId");
+
+                    b.HasIndex("ubicacionId");
 
                     b.ToTable("Personaje", (string)null);
                 });
@@ -274,11 +274,12 @@ namespace Infrastructure.Migrations
 
                     b.Property<string>("nombre")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
 
                     b.HasKey("id");
 
-                    b.ToTable("TipoPersonaje");
+                    b.ToTable("TipoPersonajes");
                 });
 
             modelBuilder.Entity("Core.Entities.Ubicacion", b =>
@@ -324,13 +325,6 @@ namespace Infrastructure.Migrations
                     b.ToTable("HabilidadPersonaje");
                 });
 
-            modelBuilder.Entity("Core.Entities.Equipo", b =>
-                {
-                    b.HasOne("Core.Entities.Personaje", null)
-                        .WithMany("equipo")
-                        .HasForeignKey("Personajeid");
-                });
-
             modelBuilder.Entity("Core.Entities.Habilidad", b =>
                 {
                     b.HasOne("Core.Entities.Enemigo", null)
@@ -342,11 +336,15 @@ namespace Infrastructure.Migrations
                 {
                     b.HasOne("Core.Entities.TipoPersonaje", "tipo")
                         .WithMany()
-                        .HasForeignKey("tipoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("tipoId");
+
+                    b.HasOne("Core.Entities.Ubicacion", "ubicacion")
+                        .WithMany()
+                        .HasForeignKey("ubicacionId");
 
                     b.Navigation("tipo");
+
+                    b.Navigation("ubicacion");
                 });
 
             modelBuilder.Entity("HabilidadPersonaje", b =>
@@ -367,11 +365,6 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Core.Entities.Enemigo", b =>
                 {
                     b.Navigation("habilidades");
-                });
-
-            modelBuilder.Entity("Core.Entities.Personaje", b =>
-                {
-                    b.Navigation("equipo");
                 });
 #pragma warning restore 612, 618
         }

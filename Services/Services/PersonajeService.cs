@@ -7,6 +7,7 @@ using Core.Interfaces;
 using Core.Services;
 using Core.Responses;
 using Services.Validators;
+using Core.DTO;
 
 namespace Services.Services
 {
@@ -20,24 +21,107 @@ namespace Services.Services
 
         
 
-        public async Task<Personaje> Create(Personaje newPersonaje)
+        public async Task<Personaje> Create(PersonajeDTO newPersonajeData)
         {
-            PersonajeValidators validator = new();
+            PersonajeDTOValidators validator = new();
 
+            // Al momento de crear un personaje tenemos que crear los atributos de cada uno de sus tipos.
+            // previamente haberlos creado a nivel de base de datos ya que no haremos un servicio especifico para ello.
+            // 1 salud, 2 energia 3, fuerza, 4 agilidad, 5 inteligencia, 6 defensa
+            
+            var validationResult = await validator.ValidateAsync(newPersonajeData);
 
-            var validationResult = await validator.ValidateAsync(newPersonaje);
+            Personaje newPersonaje = new Personaje();
+
             if (validationResult.IsValid)
             {
-                //newPersonaje.tipo = await _unitOfWork.TipoPersonajeRepository.GetByIdAsync(newPersonaje.tipoId);
 
-                //if(newPersonaje.tipo != null ) {
+                newPersonaje.tipo = await _unitOfWork.TipoPersonajeRepository.GetByIdAsync(newPersonajeData.tipoId ?? 0);
+                newPersonaje.tipoId = newPersonajeData.tipoId;
+                if(newPersonaje.tipo == null )
+                    throw new ArgumentException("El tipo de personaje no existe");
+
+                var lstUbicaciones = (await _unitOfWork.UbicacionRepository.GetAllAsync()).ToList();
+                Random random = new Random();
+                newPersonaje.ubicacion = lstUbicaciones[random.Next(1,lstUbicaciones.Count)];
+                newPersonaje.ubicacionId = newPersonaje.ubicacion.id;
+
+                //Estadistica estadistica = new Estadistica();
+                newPersonaje.salud.tipoEstadisticaId = 1;
+                newPersonaje.salud.valor = newPersonajeData.salud;
+                //await _unitOfWork.EstadisticaRepository.AddAsync(estadistica);
+                //newPersonaje.saludId = estadistica.id;
+                //estadistica.id = 0; // asingamos a cero para que el entity no confunda y en lugar de crear modifique.
+                newPersonaje.energia.tipoEstadisticaId = 2;
+                newPersonaje.energia.valor = newPersonajeData.energia;
+                //await _unitOfWork.EstadisticaRepository.AddAsync(estadistica);
+                //newPersonaje.energiaId = estadistica.id;
+                //estadistica.id = 0;
+                newPersonaje.fuerza.tipoEstadisticaId = 3;
+                newPersonaje.fuerza.valor = newPersonajeData.fuerza;
+                //await _unitOfWork.EstadisticaRepository.AddAsync(estadistica);
+                //newPersonaje.fuerzaId = estadistica.id;
+                //estadistica.id = 0;
+                newPersonaje.agilidad.tipoEstadisticaId = 4;
+                newPersonaje.agilidad.valor = newPersonajeData.agilidad;
+                //await _unitOfWork.EstadisticaRepository.AddAsync(estadistica);
+                //newPersonaje.agilidadId = estadistica.id;
+                //estadistica.id = 0;
+                newPersonaje.inteligencia.tipoEstadisticaId = 5;
+                newPersonaje.inteligencia.valor = newPersonajeData.inteligencia;
+                //await _unitOfWork.EstadisticaRepository.AddAsync(estadistica);
+                //newPersonaje.inteligenciaId = estadistica.id;
+                //estadistica.id = 0;
+                newPersonaje.defensa.tipoEstadisticaId = 6;
+                newPersonaje.defensa.valor = newPersonajeData.defensa;
+                //await _unitOfWork.EstadisticaRepository.AddAsync(estadistica);
+                //newPersonaje.defensaId = estadistica.id;
+
+                // hacemos lo mismo para equipo 
+                Equipo equipo = new Equipo();
+                ////Creamos 1ero las ranuras 
+                ////RAnura casco (1)
+                ////Ranura ranura = new Ranura();
+                //equipo.casco.tipoObjetoId = 1; // solo el tipo de obnjeto, no hay que asignar ningun objeto base
+                ////await _unitOfWork.RanuraRepository.AddAsync(ranura);
+                ////equipo.cascoId = ranura.id;
+                ////ranura.id = 0;
+                //equipo.armadura.tipoObjetoId = 2;
+                //await _unitOfWork.RanuraRepository.AddAsync(ranura);
+                //equipo.armaduraId = ranura.id;
+                //ranura.id = 0;
+                //ranura.tipoObjetoId = 3;
+                //await _unitOfWork.RanuraRepository.AddAsync(ranura);
+                //equipo.arma1Id = ranura.id;
+                //ranura.id = 0;
+                //ranura.tipoObjetoId = 3;
+                //await _unitOfWork.RanuraRepository.AddAsync(ranura);
+                //equipo.arma2Id = ranura.id;
+                //ranura.id = 0;
+                //ranura.tipoObjetoId = 4;
+                //await _unitOfWork.RanuraRepository.AddAsync(ranura);
+                //equipo.guanteletesId = ranura.id;
+                //ranura.id = 0;
+                //ranura.tipoObjetoId = 5;
+                //await _unitOfWork.RanuraRepository.AddAsync(ranura);
+                //equipo.grebasId = ranura.id;
+                //await _unitOfWork.EquipoRepository.AddAsync(equipo);
+                //newPersonaje.equipoId = equipo.id;
+                //Creamos 1ero las ranuras 
+                //RAnura casco (1)
+                //Ranura ranura = new Ranura();
+                equipo.casco.tipoObjetoId = 1; // solo el tipo de obnjeto, no hay que asignar ningun objeto base
+                equipo.armadura.tipoObjetoId = 2;
+                equipo.arma1.tipoObjetoId = 3;
+                equipo.arma2.tipoObjetoId = 3;
+                equipo.guanteletes.tipoObjetoId = 4;
+                equipo.grebas.tipoObjetoId = 5;
+                newPersonaje.equipo = equipo;
+
+                //listo personaje...
 
                 await _unitOfWork.PersonajeRepository.AddAsync(newPersonaje);
                 await _unitOfWork.CommitAsync();
-                //}
-                //else {
-                //    throw new ArgumentException("El tipo de personaje no existe");
-                //}
             }
             else
             {
@@ -112,14 +196,19 @@ namespace Services.Services
 
             PersonajeToBeUpdated.experiencia = 0;
             PersonajeToBeUpdated.nivel += 1;
-            PersonajeToBeUpdated.salud = PersonajeToBeUpdated.nivel * (new Random().Next(1,5) + 50);
-            PersonajeToBeUpdated.energia = PersonajeToBeUpdated.nivel * 50;
-            PersonajeToBeUpdated.inteligencia += new Random().Next(1,5);
-            PersonajeToBeUpdated.agilidad += new Random().Next(1,5);
-            PersonajeToBeUpdated.salud += new Random().Next(1,5);
-            PersonajeToBeUpdated.inteligencia += new Random().Next(1,5);
-            PersonajeToBeUpdated.fuerza += new Random().Next(1,5);
-            
+            PersonajeToBeUpdated.salud = await _unitOfWork.EstadisticaRepository.GetByIdAsync(PersonajeToBeUpdated.saludId);
+            PersonajeToBeUpdated.salud.valor += PersonajeToBeUpdated.nivel * (new Random().Next(1, 5) + 50);
+            PersonajeToBeUpdated.energia = await _unitOfWork.EstadisticaRepository.GetByIdAsync(PersonajeToBeUpdated.energiaId);
+            PersonajeToBeUpdated.energia.valor += PersonajeToBeUpdated.nivel * 50;
+            PersonajeToBeUpdated.inteligencia = await _unitOfWork.EstadisticaRepository.GetByIdAsync(PersonajeToBeUpdated.inteligenciaId);
+            PersonajeToBeUpdated.inteligencia.valor += new Random().Next(1,5);
+            PersonajeToBeUpdated.agilidad = await _unitOfWork.EstadisticaRepository.GetByIdAsync(PersonajeToBeUpdated.agilidadId);
+            PersonajeToBeUpdated.agilidad.valor += new Random().Next(1,5);
+            PersonajeToBeUpdated.fuerza = await _unitOfWork.EstadisticaRepository.GetByIdAsync(PersonajeToBeUpdated.fuerzaId);
+            PersonajeToBeUpdated.fuerza.valor += new Random().Next(1,5);
+            PersonajeToBeUpdated.defensa = await _unitOfWork.EstadisticaRepository.GetByIdAsync(PersonajeToBeUpdated.defensaId);
+            PersonajeToBeUpdated.defensa.valor += new Random().Next(1, 5);
+
             var validationResult = await PersonajeValidator.ValidateAsync(PersonajeToBeUpdated);
             if (!validationResult.IsValid)
                 throw new ArgumentException(validationResult.Errors.ToString());
@@ -138,18 +227,21 @@ namespace Services.Services
             var enemigo = await _unitOfWork.EnemigoRepository.GetByIdAsync(idEnemigo);
             var personaje = await _unitOfWork.PersonajeRepository.GetByIdAsync(idPersonaje);
 
+            personaje.fuerza = await _unitOfWork.EstadisticaRepository.GetByIdAsync(personaje.fuerzaId);
+            personaje.salud = await _unitOfWork.EstadisticaRepository.GetByIdAsync(personaje.saludId);
+            personaje.defensa = await _unitOfWork.EstadisticaRepository.GetByIdAsync(personaje.defensaId);
             if(Math.Abs(enemigo.nivelAmenaza - personaje.nivel) <= 5){
                 int puntosDañoEnemigo = 0;
                 int puntosDaño = (int)(
-                                    (20 + personaje.fuerza) * 1.5)
+                                    (20 + personaje.fuerza.valor) * 1.5)
                                     - (int)(10 + enemigo.defensa * 1.75);
                 enemigo.salud -=  puntosDaño;
 
                 if(enemigo.salud > 0) {
                     puntosDañoEnemigo = (int)(
                                      (20 + enemigo.fuerza) * 1.5)
-                                      - (int)(10 + personaje.defensa * 1.75);
-                    personaje.salud -= puntosDañoEnemigo;
+                                      - (int)(10 + personaje.defensa.valor * 1.75);
+                    personaje.salud.valor -= puntosDañoEnemigo;
 
                 }else{
                     personaje.experiencia += (enemigo.nivelAmenaza * 2);
@@ -188,6 +280,11 @@ namespace Services.Services
             await _unitOfWork.CommitAsync();
             return PersonajeToBeUpdated;
 
+        }
+
+        public Task<Personaje> Create(Personaje newEntidad)
+        {
+            throw new NotImplementedException();
         }
     }
 }

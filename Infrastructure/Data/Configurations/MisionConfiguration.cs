@@ -15,9 +15,8 @@ namespace Infrastructure.Data.Configurations
             builder.HasKey(x => x.id);
             builder.Property(x => x.id).UseIdentityColumn();
             builder.Property(x => x.nombre).IsRequired().HasMaxLength(255); 
-            builder.Property(x => x.objetivos).IsRequired(); 
+            //builder.Property(x => x.objetivos).IsRequired(); 
             builder.Property(x => x.recompensas).IsRequired(); 
-            builder.Property(x => x.estado).IsRequired(); 
             builder.ToTable("Mision");
         }
         

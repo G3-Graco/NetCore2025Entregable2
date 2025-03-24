@@ -1,3 +1,4 @@
+using Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,11 +9,11 @@ namespace Core.Interfaces.Entities
     public interface IEquipo
     {
         public int id { get; set; }
-        public string casco { get; set; }
-        public string armadura { get; set; }
-        public string arma1 { get; set; }
-        public string arma2 { get; set; }
-        public string guanteletes { get; set; }
-        public string grebas { get; set; }
+        public Ranura casco { get; set; }
+        public Ranura armadura { get; set; }
+        public Ranura arma1 { get; set; }
+        public Ranura arma2 { get; set; }
+        public Ranura guanteletes { get; set; }
+        public Ranura grebas { get; set; }
     }
 }

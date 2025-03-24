@@ -15,6 +15,10 @@ namespace Web.Controllers
             _servicio = habilidadService;
         }
 
+        /// <summary>
+        /// Obtener todas las habilidades configuradas
+        /// </summary>
+        /// <returns>Lista de actividades</returns>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Habilidad>>> Get()
         {
@@ -26,6 +30,18 @@ namespace Web.Controllers
 
 
         // POST api/<PersonajeController>
+        /// <summary>
+        /// Método para crear una habilidad nueva
+        /// </summary>
+        /// <param name="personaje">Instacia de la clase habilidad</param>
+        /// <returns>Objeto Habilidad</returns>
+        /// <remarks>
+        /// Ejemplo de un JSON request
+        /// {
+        ///     "id": 0,
+        ///     "nombre": "string"
+        /// }
+        /// </remarks>
         [HttpPost]
         public async Task<ActionResult<Habilidad>> Post([FromBody] Habilidad personaje)
         {

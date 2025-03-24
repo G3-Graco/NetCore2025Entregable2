@@ -10,6 +10,11 @@ public interface IUnitOfWork : IDisposable
         IMisionRepository MisionRepository { get; }
         IObjetoRepository ObjetoRepository { get; }
         IUbicacionRepository UbicacionRepository { get; }
+        ITipoPersonajeRepository TipoPersonajeRepository { get; }
+        ITipoEstadisticaRepository TipoEstadisticaRepository { get; }
+        IEstadisticaRepository EstadisticaRepository { get; }
+        IRanuraRepository RanuraRepository { get; }
+        ITipoObjetoRepository TipoObjetoRepository { get; }
 
     Task<int> CommitAsync();
     }

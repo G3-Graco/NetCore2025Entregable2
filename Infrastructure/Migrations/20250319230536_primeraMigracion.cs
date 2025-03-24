@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class MigracionInicial : Migration
+    public partial class primeraMigracion : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -31,6 +31,24 @@ namespace Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Enemigo", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Equipo",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    casco = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    armadura = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    arma1 = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    arma2 = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    guanteletes = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    grebas = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Equipo", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -66,24 +84,16 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Personaje",
+                name: "TipoPersonajes",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    nombre = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    salud = table.Column<int>(type: "integer", nullable: false),
-                    energia = table.Column<int>(type: "integer", nullable: false),
-                    fuerza = table.Column<int>(type: "integer", nullable: false),
-                    inteligencia = table.Column<int>(type: "integer", nullable: false),
-                    agilidad = table.Column<int>(type: "integer", nullable: false),
-                    nivel = table.Column<int>(type: "integer", nullable: false),
-                    defensa = table.Column<int>(type: "integer", nullable: false),
-                    experiencia = table.Column<int>(type: "integer", nullable: false)
+                    nombre = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Personaje", x => x.id);
+                    table.PrimaryKey("PK_TipoPersonajes", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -127,26 +137,35 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Equipo",
+                name: "Personaje",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    casco = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    armadura = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    arma1 = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    arma2 = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    guanteletes = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    grebas = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    Personajeid = table.Column<int>(type: "integer", nullable: true)
+                    nombre = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    salud = table.Column<int>(type: "integer", nullable: false),
+                    energia = table.Column<int>(type: "integer", nullable: false),
+                    fuerza = table.Column<int>(type: "integer", nullable: false),
+                    inteligencia = table.Column<int>(type: "integer", nullable: false),
+                    agilidad = table.Column<int>(type: "integer", nullable: false),
+                    nivel = table.Column<int>(type: "integer", nullable: false),
+                    defensa = table.Column<int>(type: "integer", nullable: false),
+                    experiencia = table.Column<int>(type: "integer", nullable: false),
+                    tipoId = table.Column<int>(type: "integer", nullable: true),
+                    ubicacionId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Equipo", x => x.id);
+                    table.PrimaryKey("PK_Personaje", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Equipo_Personaje_Personajeid",
-                        column: x => x.Personajeid,
-                        principalTable: "Personaje",
+                        name: "FK_Personaje_TipoPersonajes_tipoId",
+                        column: x => x.tipoId,
+                        principalTable: "TipoPersonajes",
+                        principalColumn: "id");
+                    table.ForeignKey(
+                        name: "FK_Personaje_Ubicacion_ubicacionId",
+                        column: x => x.ubicacionId,
+                        principalTable: "Ubicacion",
                         principalColumn: "id");
                 });
 
@@ -175,11 +194,6 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Equipo_Personajeid",
-                table: "Equipo",
-                column: "Personajeid");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_HabilidadPersonaje_personajesid",
                 table: "HabilidadPersonaje",
                 column: "personajesid");
@@ -188,6 +202,16 @@ namespace Infrastructure.Migrations
                 name: "IX_Habilidads_Enemigoid",
                 table: "Habilidads",
                 column: "Enemigoid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Personaje_tipoId",
+                table: "Personaje",
+                column: "tipoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Personaje_ubicacionId",
+                table: "Personaje",
+                column: "ubicacionId");
         }
 
         /// <inheritdoc />
@@ -206,9 +230,6 @@ namespace Infrastructure.Migrations
                 name: "Objeto");
 
             migrationBuilder.DropTable(
-                name: "Ubicacion");
-
-            migrationBuilder.DropTable(
                 name: "Habilidads");
 
             migrationBuilder.DropTable(
@@ -216,6 +237,12 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Enemigo");
+
+            migrationBuilder.DropTable(
+                name: "TipoPersonajes");
+
+            migrationBuilder.DropTable(
+                name: "Ubicacion");
         }
     }
 }
