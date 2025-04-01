@@ -29,6 +29,20 @@ namespace Web.Crontrollers
             return Ok(Personajes);
         }
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Personaje>> Get(int id)
+        {
+            try
+            {
+                var Personajes = await _servicio.GetById(id);
+                return Ok(Personajes);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
 
         // POST api/<PersonajeController>
         [HttpPost]

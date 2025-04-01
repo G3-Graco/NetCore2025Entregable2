@@ -43,6 +43,11 @@ namespace Services.Services
                 throw new Exception("La ubicación no existe");
             }
 
+            var personaje = await _unitOfWork.PersonajeRepository.GetByIdUbicacionAsync(ubicacionId);
+
+            if (personaje != null)
+                throw new Exception("Ubicacion no puede ser eliminada, hay persoanjes en ella ");
+
             _unitOfWork.UbicacionRepository.Remove(ubicacion);
             await _unitOfWork.CommitAsync();
         }

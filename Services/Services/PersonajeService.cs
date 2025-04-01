@@ -32,6 +32,8 @@ namespace Services.Services
             var validationResult = await validator.ValidateAsync(newPersonajeData);
 
             Personaje newPersonaje = new Personaje();
+            newPersonaje.nombre = newPersonajeData.nombre;
+
 
             if (validationResult.IsValid)
             {
