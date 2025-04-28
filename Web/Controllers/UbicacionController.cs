@@ -6,6 +6,7 @@ using Core.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services.Services;
+using Web.Helpers;
 
 namespace Web.Controllers
 {
@@ -21,6 +22,7 @@ namespace Web.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Ubicacion>>> Get()
         {
             var ubicaciones = await _ubicacionService.GetAll();
@@ -42,6 +44,8 @@ namespace Web.Controllers
         }
 
         [HttpPost]
+        [Authorize]
+
         public async Task<ActionResult<Ubicacion>> Post([FromBody] Ubicacion ubicacion)
         {
             try

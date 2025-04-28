@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
-using Core.Entidades;
+using Core.Entities;
 
 
 namespace Web.Helpers
@@ -13,7 +13,7 @@ namespace Web.Helpers
             var ok = (bool?)context.HttpContext.Items["ok"];
             if (ok == null)
             {
-                context.Result = new JsonResult(new { message = "el token no es valido, Lino no aprueba esto" }) { StatusCode = StatusCodes.Status401Unauthorized };
+                context.Result = new JsonResult(new { message = "el token no es valido" }) { StatusCode = StatusCodes.Status401Unauthorized };
             }
         }
     }

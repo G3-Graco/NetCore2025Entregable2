@@ -6,11 +6,13 @@ using Core.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services.Services;
+using Web.Helpers;
 
 namespace Web.Crontrollers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PersonajeController : ControllerBase
     {
        

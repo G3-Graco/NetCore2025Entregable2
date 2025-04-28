@@ -101,7 +101,7 @@ builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddDbContext<AppDbContext>(patata =>
-        patata.UseNpgsql("Host=dpg-d07up2qdbo4c73btv6a0-a;Server=dpg-d07up2qdbo4c73btv6a0-a.oregon-postgres.render.com;Port=5432;Database=netcore2025gracotaller;Username=netcore2025gracotaller_user;Password=JySaSfBbVSvDX4BZSLhgjJYxOVTCntx8;Include Error Detail=true;",
+        patata.UseNpgsql("Host=dpg-d07up2qdbo4c73btv6a0-a;Server=dpg-d07up2qdbo4c73btv6a0-a.oregon-postgres.render.com;Port=5432;Database=netcore2025gracotaller;Username=netcore2025gracotaller_user;Password=N7VBiUb3mGYgjs5kggnzcFLuoBMoo2Ch;Include Error Detail=true;",
         b => b.MigrationsAssembly("Infrastructure")));
 
 
