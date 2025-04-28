@@ -9,6 +9,7 @@ using Services.Services;
 using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.Options;
 using System.Reflection;
+using Web.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,33 +18,58 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 
 
-builder.Services.AddSwaggerGen(opciones =>
+builder.Services.AddSwaggerGen(options =>
 {
-    opciones.SwaggerDoc("v1", new OpenApiInfo
+    options.SwaggerDoc("v1", new OpenApiInfo
     {
         Version = "v1",
-        Title = "API Gracosoft .NET Core 2025",
-        Description = "Aplicación desarrollada para practicar los temas vistos en clase",
-        TermsOfService = new Uri("https://example.com/term"),
+        Title = "API Gracosoft .NET CORe",
+        Description = "Aplicación elaborada durante las clases del 1 al 9 de la asignatura .Net Core, se encarga del procesamiento de la lógica de un videojuego RPG.",
+        TermsOfService = new Uri("https://example.com/terms"),
         Contact = new OpenApiContact
         {
             Name = "Guillermo Giménez",
-            Url = new Uri("https://github.com/G3-Graco/graco-netcore-2025-entregable-2-NetCore2025Entregable2")
+            Url = new Uri("https://github.com/GGimenezG/GracoNETCore")
         },
         License = new OpenApiLicense
         {
-            Name = "Example",
+            Name = "Example License",
             Url = new Uri("https://example.com/license")
         }
-
     });
 
+    // To Enable authorization using Swagger (JWT)
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\"",
+    });
 
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                          new OpenApiSecurityScheme
+                            {
+                                Reference = new OpenApiReference
+                                {
+                                    Type = ReferenceType.SecurityScheme,
+                                    Id = "Bearer"
+                                }
+                            },
+                            new string[] {}
+
+                    }
+                });
+
+
+    // using System.Reflection;
     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    opciones.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
-
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
 });
-
 
 
 builder.Services.AddControllers();
@@ -72,9 +98,10 @@ builder.Services.AddScoped(typeof(ITipoObjetoRepository), typeof(TipoObjetoRepos
 builder.Services.AddScoped(typeof(IUbicacionRepository), typeof(UbicacionRepository));
 
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddDbContext<AppDbContext>(patata =>
-        patata.UseNpgsql("Host=dpg-cvdjlolrie7s739p95i0-a;Server=dpg-cvdjlolrie7s739p95i0-a.oregon-postgres.render.com;Port=5432;Database=netcore2025graco_e6gd;Username=netcore2025graco_e6gd_user;Password=JySaSfBbVSvDX4BZSLhgjJYxOVTCntx8;Include Error Detail=true;",
+        patata.UseNpgsql("Host=dpg-d07up2qdbo4c73btv6a0-a;Server=dpg-d07up2qdbo4c73btv6a0-a.oregon-postgres.render.com;Port=5432;Database=netcore2025gracotaller;Username=netcore2025gracotaller_user;Password=JySaSfBbVSvDX4BZSLhgjJYxOVTCntx8;Include Error Detail=true;",
         b => b.MigrationsAssembly("Infrastructure")));
 
 
@@ -94,6 +121,12 @@ app.MapControllers();
 //}
 
 app.UseHttpsRedirection();
+
+app.UseMiddleware<JwtMiddleware>();
+//app.Services.a
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 
 
